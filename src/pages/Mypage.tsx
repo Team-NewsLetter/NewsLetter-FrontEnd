@@ -31,7 +31,7 @@ const MyPage = () => {
   enum UserTag {
     animal = "동물",
     plant = "식물",
-    food = "식품",
+    food = "음식",
     policy = "정책",
     science = "과학",
     life = "생활",

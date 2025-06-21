@@ -7,16 +7,19 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "../apis/axios";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
 const DailyNewsListPage = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<"popular" | "personal">("popular");
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  dayjs.extend(relativeTime);
 
   enum UserTag {
     animal = "동물",
     plant = "식물",
-    food = "식품",
+    food = "음식",
     policy = "정책",
     science = "과학",
     life = "생활",
@@ -119,31 +122,45 @@ const DailyNewsListPage = () => {
             뉴스가 없습니다.
           </div>
         ) : (
-          allNews.map((news, index) => (
-            <div
-              key={news.id}
-              onClick={() => navigate(`/news/${news.id}`)}
-              className={`${
-                index === 0
-                  ? "border p-3 rounded-lg shadow-sm"
-                  : "flex items-start gap-3 p-2 rounded-lg hover:bg-gray-100"
-              } border-blue-200`}
-            >
+          allNews.map((news, index) =>
+            index === 0 ? (
               <div
-                className={`${
-                  index === 0 ? "h-32" : "w-14 h-14"
-                } bg-gray-200 rounded-md`}
-              />
-              <div className="flex-1">
-                <p className="font-medium text-gray-700 text-sm">
-                  {news.title}
-                </p>
+                key={news.id}
+                onClick={() => navigate(`/news/${news.id}`)}
+                className="border border-blue-200 rounded-lg p-3"
+              >
+                <img
+                  src={news.thumbnailUrl}
+                  alt={news.title}
+                  className="object-cover rounded-md h-32 w-full"
+                />
+                <p className="font-medium text-gray-700 mt-2">{news.title}</p>
                 <p className="text-xs text-gray-500 mt-1">
-                  {news.newsTag || "기타"}
+                  {dayjs(news.createdAt).fromNow()}
                 </p>
               </div>
-            </div>
-          ))
+            ) : (
+              <div
+                key={news.id}
+                onClick={() => navigate(`/news/${news.id}`)}
+                className="border border-blue-200 flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100"
+              >
+                <img
+                  src={news.thumbnailUrl}
+                  alt={news.title}
+                  className="object-cover rounded-md w-14 h-14"
+                />
+                <div className="flex-1">
+                  <p className="text-sm font-medium line-clamp-2 text-gray-700">
+                    {news.title}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {dayjs(news.createdAt).fromNow()}
+                  </p>
+                </div>
+              </div>
+            )
+          )
         )}
         {isFetchingNextPage &&
           Array.from({ length: 6 }).map((_, i) => (

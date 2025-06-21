@@ -48,7 +48,9 @@ const HomePage = () => {
         className="flex-1 flex flex-col items-center justify-center rounded-xl"
         style={{
           backgroundImage: `url(http://51.20.65.235:8080${backgroundImageUrl})`,
-          backgroundSize: "contain",
+          backgroundSize: "150%",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "bottom",
         }}
       >
         <div

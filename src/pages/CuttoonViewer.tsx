@@ -30,7 +30,7 @@ const CuttoonViewer = () => {
   // 카드 데이터 만들기
   const cuts: CutProps[] = detail.cardNewsItems.map((item: any) => ({
     type: "cut",
-    src: item.imageUrl,
+    src: `${item.imageUrl}`,
     text: item.description,
     cardNewsId: parsedId,
   }));

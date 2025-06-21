@@ -4,7 +4,7 @@ export type CardNews = {
   id: number;
   title: string;
   thumbnailUrl: string;
-  newsTag: string[];
+  newsTag: string | string[];
   createdAt: string;
 };
 export type CardNewsDetailResponseDto = {

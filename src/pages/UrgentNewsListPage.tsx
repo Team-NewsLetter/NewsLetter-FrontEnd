@@ -4,9 +4,12 @@ import { useEffect } from "react";
 import { getCardNewsList } from "../apis/cardnews";
 import { CardNews } from "../types/cardnews";
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
 const UrgentNewsListPage = () => {
   const navigate = useNavigate();
+  dayjs.extend(relativeTime);
 
   const { data, isPending, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
@@ -55,11 +58,14 @@ const UrgentNewsListPage = () => {
                   onClick={() => navigate(`/news/${news.id}`)}
                   className="border border-blue-200 rounded-lg p-3"
                 >
-                  <div className="h-32 bg-gray-200 rounded-lg mb-2" />
-                  <p className="font-medium text-gray-700">{news.title}</p>
+                  <img
+                    src={news.thumbnailUrl}
+                    alt={news.title}
+                    className="object-cover rounded-md h-32 w-full"
+                  />
+                  <p className="font-medium text-gray-700 mt-2">{news.title}</p>
                   <p className="text-xs text-gray-500 mt-1">
-                    {new Date(news.createdAt).toLocaleDateString()} ·{" "}
-                    {news.newsTag ?? "기타"}
+                    {dayjs(news.createdAt).fromNow()}
                   </p>
                 </div>
               ) : (
@@ -68,25 +74,22 @@ const UrgentNewsListPage = () => {
                   onClick={() => navigate(`/news/${news.id}`)}
                   className="border border-blue-200 flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100"
                 >
+                  <img
+                    src={news.thumbnailUrl}
+                    alt={news.title}
+                    className="object-cover rounded-md w-14 h-14"
+                  />
                   <div className="flex-1">
                     <p className="text-sm font-medium line-clamp-2 text-gray-700">
                       {news.title}
                     </p>
                     <p className="text-xs text-gray-500 mt-1">
-                      {news.newsTag ?? "기타"} · {(index + 1) * 10}분 전
+                      {dayjs(news.createdAt).fromNow()}
                     </p>
                   </div>
-                  <div className="w-14 h-14 bg-gray-200 rounded-md shrink-0" />
                 </div>
               )
             )}
-        {isFetchingNextPage &&
-          Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={`next-loading-${i}`}
-              className="h-20 bg-gray-100 animate-pulse rounded-lg"
-            />
-          ))}
       </div>
 
       <div ref={ref} className="h-1" />

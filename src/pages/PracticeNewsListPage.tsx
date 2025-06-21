@@ -4,9 +4,14 @@ import { useEffect } from "react";
 import { getCardNewsList } from "../apis/cardnews";
 import { CardNews } from "../types/cardnews";
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/ko";
 
 const PracticeNewsListPage = () => {
   const navigate = useNavigate();
+  dayjs.extend(relativeTime);
+  dayjs.locale("ko");
 
   const { data, isPending, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
@@ -14,7 +19,7 @@ const PracticeNewsListPage = () => {
       queryFn: ({ pageParam = 0 }) =>
         getCardNewsList({
           page: pageParam,
-          size: 10,
+          size: 5,
           type: "practice",
         }),
       initialPageParam: 0,
@@ -57,11 +62,16 @@ const PracticeNewsListPage = () => {
                   onClick={() => navigate(`/news/${news.id}`)}
                   className="border border-blue-200 rounded-lg p-3"
                 >
-                  <div className="h-32 bg-gray-200 rounded-lg mb-2" />
+                  <img
+                    src={news.thumbnailUrl}
+                    alt={news.title}
+                    className={`object-cover rounded-md ${
+                      index === 0 ? "h-32 w-full" : "w-14 h-14"
+                    }`}
+                  />{" "}
                   <p className="font-medium text-gray-700">{news.title}</p>
                   <p className="text-xs text-gray-500 mt-1">
-                    {new Date(news.createdAt).toLocaleDateString()} ·{" "}
-                    {news.newsTag}
+                    {dayjs(news.createdAt).fromNow()}
                   </p>
                 </div>
               ) : (
@@ -69,15 +79,23 @@ const PracticeNewsListPage = () => {
                 <div
                   key={news.id}
                   onClick={() => navigate(`/news/${news.id}`)}
-                  className="border flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100"
+                  className="border border-blue-200 flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100"
                 >
+                  <img
+                    src={news.thumbnailUrl}
+                    alt={news.title}
+                    className={`object-cover rounded-md ${
+                      index === 0 ? "h-32 w-full" : "w-14 h-14"
+                    }`}
+                  />
                   <div className="flex-1">
                     <p className="text-sm font-medium line-clamp-2 text-gray-700">
                       {news.title}
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">{news.newsTag}</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {dayjs(news.createdAt).fromNow()}
+                    </p>
                   </div>
-                  <div className="w-14 h-14 bg-gray-200 rounded-md shrink-0" />
                 </div>
               )
             )}
