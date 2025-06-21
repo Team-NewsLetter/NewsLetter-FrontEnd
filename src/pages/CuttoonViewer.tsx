@@ -46,7 +46,7 @@ const CuttoonViewer = () => {
     type: "feedback",
     src: `${domain}${last?.imageUrl ?? ""}`,
     text:
-      detail.newsType === "실천" ? "탄소 중립 참여에 기여하시겠습니까?" : "",
+      detail.newsType === "실천" ? "탄소 중립 참여에\n기여하시겠습니까?" : "",
     cardNewsId: parsedId,
     newsType: detail.newsType,
   };
@@ -70,7 +70,7 @@ const CuttoonViewer = () => {
       >
         {cuts.map((cut, index) => (
           <SwiperSlide key={index}>
-            <div className="flex justify-center items-center h-full px-4">
+            <div className="flex justify-center items-center h-full px-4 whitespace-pre-line break-normal	">
               <Cut {...cut} index={index} total={cuts.length} />
             </div>
           </SwiperSlide>
